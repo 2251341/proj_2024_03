@@ -1,15 +1,19 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         System.out.println("== 프로젝트 시작 ==");
+
 
         Scanner sc = new Scanner(System.in);
         int lastArticleId = 0;
 
+        List<Article> articles = new ArrayList<>();
+        int ArticleId = 0;
 
         while (true){
             System.out.printf("명령어) ");
@@ -24,7 +28,9 @@ public class Main {
             if(cmd.equals("exit")){
                 break;
             }
-            if(cmd.equals("article write")){ //article = 게시물
+
+
+            if(cmd.equals("article write")){
                 int id = lastArticleId + 1; // 갱신
                 lastArticleId = id;
                 System.out.printf("제목 :");
@@ -32,21 +38,45 @@ public class Main {
                 System.out.printf("내용 :");
                 String body = sc.nextLine();
 
-                System.out.printf("%d번 글이 생성 되었습니다\n", id);
-            }
+                articles.add(new Article(id, title, body ));
 
-            else if(cmd.equals("article list")){ //article = 게시물
-                System.out.println("게시물이 없습니다.");
-            }
-            else {
-                System.out.printf("%s(은)는 존재하지 않는 명령어 입니다.\n", cmd);
-            }
+                System.out.printf("%d번 글이 생성되었습니다.\n", id);
+            } else if (cmd.equals("article list")) {
+                if (articles.size() == 0) {
+                    System.out.println("게시물이 없습니다.");
+                    continue;
+                }
 
+                System.out.println("번호 | 제목");
+                for( int i = 0; i <articles.size(); i++){
+                    Article article = articles.get(i);
+
+                    System.out.printf("%d | %s\n", article.id, article.title);
+                }
+
+            } else {
+                System.out.printf("%s(은)는 존재하지 않는 명령어입니다.\n", cmd);
+            }
         }
 
 
         sc.close();
         System.out.println("== 프로젝트 끝 ==");
 
+    }
+}
+class Article {
+    int id;
+    String title;
+    String body;
+
+    public Article(int id, String title, String body){
+        this.id = id;
+        this.title = title;
+        this.body = body;
+    }
+
+    public int getId() {
+        return id;
     }
 }
