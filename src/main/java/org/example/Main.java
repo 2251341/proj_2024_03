@@ -13,11 +13,9 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         int lastArticleId = 0;
-
         List<Article> articles = new ArrayList<>();
-
-
         String cmd;
+
         while (true) {
             System.out.printf("명령어) ");
             cmd = sc.nextLine();
@@ -60,7 +58,7 @@ public class Main {
             }
 
             else if (cmd.startsWith("article detail")) {
-                System.out.print("게시물 번호 : ");
+                System.out.print("번호 : ");
                 int articleId = sc.nextInt();
                 sc.nextLine();
 
@@ -82,7 +80,26 @@ public class Main {
                 } else {
                     System.out.printf("%d번 게시물은 존재하지 않습니다.\n", articleId);
                 }
-            } else {
+            }
+            else if (cmd.startsWith("article delete")) {
+                System.out.print("번호 : ");
+                int deleteArticleId = sc.nextInt();
+                sc.nextLine();
+
+                boolean isDeleted = false;
+                for (Article article : articles) {
+                    if (article.id == deleteArticleId) {
+                        articles.remove(article);
+                        isDeleted = true;
+                        System.out.printf("%d번 게시물이 삭제되었습니다.\n", deleteArticleId);
+                        break;
+                    }
+                }
+
+                if (!isDeleted) {
+                    System.out.printf("%d번 게시물은 존재하지 않습니다.\n", deleteArticleId);
+                }
+            }else {
                 System.out.printf("%s(은)는 존재하지 않는 명령어입니다.\n", cmd);
             }
         }
