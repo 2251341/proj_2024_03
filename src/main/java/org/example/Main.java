@@ -1,120 +1,129 @@
 package org.example;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("== 프로젝트 시작 ==");
-
-
+        System.out.println("== 프로그램 시작 ==");
         Scanner sc = new Scanner(System.in);
-        int lastArticleId = 0;
-        List<Article> articles = new ArrayList<>();
-        String cmd;
 
-        while (true) {
+        int lastArticleId = 0;
+
+        List<Article> articles = new ArrayList<>();
+
+        while ( true ) {
             System.out.printf("명령어) ");
-            cmd = sc.nextLine();
+            String cmd = sc.nextLine();
             cmd = cmd.trim();
 
-
-            if (cmd.length() == 0) {
+            if ( cmd.length() == 0 ) {
                 continue;
             }
 
-            if (cmd.equals("exit")) {
+            if ( cmd.equals("exit") ) {
                 break;
             }
 
-
-            if (cmd.equals("article write")) {
+            if ( cmd.equals("article write") ) {
                 int id = lastArticleId + 1;
                 lastArticleId = id;
-                System.out.printf("제목 :");
+                String regDate = Util.getNowDateStr();
+                System.out.printf("제목 : ");
                 String title = sc.nextLine();
-                System.out.printf("내용 :");
+                System.out.printf("내용 : ");
                 String body = sc.nextLine();
 
-                articles.add(new Article(id, title, body));
+                Article article = new Article(id, regDate, title, body);
+                articles.add(article);
 
                 System.out.printf("%d번 글이 생성되었습니다.\n", id);
-            } else if (cmd.equals("article list")) {
-                if (articles.size() == 0) {
+            }
+            else if ( cmd.equals("article list") ) {
+                if ( articles.size() == 0 ) {
                     System.out.println("게시물이 없습니다.");
                     continue;
                 }
 
                 System.out.println("번호 | 제목");
-                for (int i = 0; i < articles.size(); i++) {
+                for ( int i = articles.size() - 1; i >= 0 ; i-- ) {
                     Article article = articles.get(i);
 
-                    System.out.printf("%d | %s\n", article.id, article.title);
+                    System.out.printf("%d    | %s\n", article.id, article.title);
                 }
-
             }
-
-            else if (cmd.startsWith("article detail")) {
-                System.out.print("번호 : ");
-                int articleId = sc.nextInt();
-                sc.nextLine();
+            else if ( cmd.startsWith("article detail ") ) {
+                String[] cmdBits = cmd.split(" ");
+                int id = Integer.parseInt(cmdBits[2]); // "1" => 1
 
                 Article foundArticle = null;
-                for (Article article : articles) {
-                    if (article.id == articleId) {
+
+                for ( int i = 0; i < articles.size(); i++ ) {
+                    Article article = articles.get(i);
+
+                    if ( article.id == id ) {
                         foundArticle = article;
                         break;
                     }
                 }
 
-                if (foundArticle != null) {
-                    LocalDateTime currentTime = LocalDateTime.now();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-                    System.out.println("날짜: " + currentTime.format(formatter));
-                    System.out.println("제목: " + foundArticle.title);
-                    System.out.println("내용: " + foundArticle.body);
-                } else {
-                    System.out.printf("%d번 게시물은 존재하지 않습니다.\n", articleId);
+                if ( foundArticle == null ) {
+                    System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+                    continue;
                 }
-            }
-            else if (cmd.startsWith("article delete")) {
-                System.out.print("번호 : ");
-                int deleteArticleId = sc.nextInt();
-                sc.nextLine();
 
-                boolean isDeleted = false;
-                for (Article article : articles) {
-                    if (article.id == deleteArticleId) {
-                        articles.remove(article);
-                        isDeleted = true;
-                        System.out.printf("%d번 게시물이 삭제되었습니다.\n", deleteArticleId);
+                System.out.printf("번호 : %d\n", foundArticle.id);
+                System.out.printf("날짜 : %s\n", foundArticle.regDate);
+                System.out.printf("제목 : %s\n", foundArticle.title);
+                System.out.printf("내용 : %s\n", foundArticle.body);
+            }
+            else if ( cmd.startsWith("article delete ") ) {
+                String[] cmdBits = cmd.split(" ");
+                int id = Integer.parseInt(cmdBits[2]);
+
+                int foundIndex = -1;
+
+                for ( int i = 0; i < articles.size(); i++ ) {
+                    Article article = articles.get(i);
+
+                    if ( article.id == id ) {
+                        foundIndex = i;
                         break;
                     }
                 }
 
-                if (!isDeleted) {
-                    System.out.printf("%d번 게시물은 존재하지 않습니다.\n", deleteArticleId);
+                if ( foundIndex == -1 ) {
+                    System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+                    continue;
                 }
-            }else {
-                System.out.printf("%s(은)는 존재하지 않는 명령어입니다.\n", cmd);
+
+                // size() => 3
+                // index : 0, 1, 2
+                // id    : 1, 2, 3
+                articles.remove(foundIndex);
+
+                System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+            }
+            else {
+                System.out.printf("%s(은)는 존재하지 않는 명령어 입니다.\n", cmd);
             }
         }
+
         sc.close();
-        System.out.println("== 프로젝트 끝 ==");
+        System.out.println("== 프로그램 끝 ==");
     }
 }
 
 class Article {
     int id;
+    String regDate;
     String title;
     String body;
 
-    public Article(int id, String title, String body){
+    public Article(int id, String regDate, String title, String body) {
         this.id = id;
+        this.regDate = regDate;
         this.title = title;
         this.body = body;
     }
