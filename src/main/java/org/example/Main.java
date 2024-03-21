@@ -7,16 +7,17 @@ import java.util.Scanner;
 public class Main {
     private static List<Article> articles;
 
-    static {
+    Main() {
         articles = new ArrayList<>();
     }
-
     public static void main(String[] args) {
         System.out.println("== 프로그램 시작 ==");
-
+        Scanner sc = new Scanner(System.in);
         makeTestData();
 
-        Scanner sc = new Scanner(System.in);
+        int lastArticleId = 0;
+
+
 
         while ( true ) {
             System.out.printf("명령어) ");
@@ -32,17 +33,18 @@ public class Main {
             }
 
             if ( cmd.equals("article write") ) {
-                int id = articles.size() + 1;
+                int id = lastArticleId + 1;
+                lastArticleId = id;
                 String regDate = Util.getNowDateStr();
                 System.out.printf("제목 : ");
                 String title = sc.nextLine();
                 System.out.printf("내용 : ");
                 String body = sc.nextLine();
 
-                Article article = new Article(id, regDate, title, body);
+                Article article = new Article(id, regDate, title, body,);
                 articles.add(article);
 
-                System.out.printf("%d번 게시물이 생성되었습니다.\n", id);
+                System.out.printf("%d번 글이 생성되었습니다.\n", id);
             }
             else if ( cmd.equals("article list") ) {
                 if ( articles.size() == 0 ) {
@@ -50,7 +52,7 @@ public class Main {
                     continue;
                 }
 
-                System.out.println("번호 | 조회 | 제목 ");
+                System.out.println("번호 | 조회 | 제목");
                 for ( int i = articles.size() - 1; i >= 0 ; i-- ) {
                     Article article = articles.get(i);
 
@@ -146,20 +148,17 @@ public class Main {
                 System.out.printf("%s(은)는 존재하지 않는 명령어 입니다.\n", cmd);
             }
         }
-
         sc.close();
         System.out.println("== 프로그램 끝 ==");
     }
-
     private static void makeTestData() {
-        System.out.println("테스트를 위한 게시물 데이터를 생성합니다");
+        System.out.println("테스트 게시물 생성");
 
-        articles.add(new Article(1, Util.getNowDateStr(), "제목 1", "내용 1", 12));
-        articles.add(new Article(2, Util.getNowDateStr(), "제목 2", "내용 2", 103));
-        articles.add(new Article(3, Util.getNowDateStr(), "제목 3", "내용 3", 3));
+        articles.add(new Article(1, Util.getNowDateStr(), "제목 1", "내용1",3));
+        articles.add(new Article(2, Util.getNowDateStr(), "제목 2", "내용2",103));
+        articles.add(new Article(3, Util.getNowDateStr(), "제목 3", "내용3",105));
     }
 }
-
 class Article {
     int id;
     String regDate;
@@ -173,13 +172,13 @@ class Article {
         this.title = title;
         this.body = body;
         this.hit = hit;
-    }
 
+    }
     public Article(int id, String regDate, String title, String body) {
-        this(id, regDate, title, body, 0);
-    }
+        this(id, regDate, title, body, 0); //this
 
-    public void increaseHit() {
-        hit++;
+    }
+    public  void increaseHit() {
+        hit++; // 히트를 하나씩 증가 해주는 역할
     }
 }
