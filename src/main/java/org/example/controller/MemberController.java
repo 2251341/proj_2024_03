@@ -13,7 +13,7 @@ public class MemberController extends Controller{
     private List<Member> members;
     private String cmd;
     private String actionMethodName;
-    private Member loginndMember;
+    private Member loginedMember;
     public MemberController(Scanner sc){
         this.sc = sc;
         members = new ArrayList<>();
@@ -30,11 +30,17 @@ public class MemberController extends Controller{
             case "login":
                 dologin();
                 break;
+            case "logout":
+                doLogout();
+                break;
             default:
                 System.out.println("존재하지 않는 명령어 입니다.");
                 break;
         }
     }
+
+
+
     public void makeTestData() {
         System.out.println("테스트를 위한 회원 데이터를 생성합니다");
 
@@ -83,11 +89,29 @@ public class MemberController extends Controller{
 
         members.add(member);
 
-
+        loginedMember = member;
         System.out.printf("%d번 회원이 생성되었습니다. 환영합니다!\n", id);
 
     }
+
+    private  boolean isLogined(){
+        return loginedMember != null;
+    }
+    private void doLogout() {
+        if (isLogined() == false){
+            System.out.println("로그인 상태가 아닙니다");
+            return;
+        }
+        loginedMember = null;
+        System.out.println("로그아웃 되었습니다.");
+
+    }
     public void dologin() {
+        if(isLogined()){
+            System.out.println("이미 로그인 되어 있습니다.");
+            return;
+        }
+
         System.out.printf("로그인 아이디 : ");
         String loginid = sc.nextLine();
         System.out.printf("로그인 비번 : ");
@@ -106,8 +130,8 @@ public class MemberController extends Controller{
            return;
        }
 
-       loginndMember = member;
-       System.out.printf("로그인 성공! %s님 환영합니다\n", loginndMember.name);
+       loginedMember = member;
+       System.out.printf("로그인 성공! %s님 환영합니다\n", loginedMember.name);
     }
 
     private boolean isJoinableLoginId(String loginId) {
