@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.controller.ArticleController;
+import org.example.controller.Controller;
 import org.example.controller.MemberController;
 import org.example.dto.Article;
 import org.example.dto.Member;
@@ -22,17 +23,18 @@ public class App {
     public void start() {
         System.out.println("== 프로그램 시작 ==");
 
-        makeTestData();
+
 
         Scanner sc = new Scanner(System.in);
 
         MemberController memberController = new MemberController(sc);
         ArticleController articleController = new ArticleController(sc);
+        articleController.makeTestData();
 
         while (true) {
             System.out.printf("명령어) ");
             String cmd = sc.nextLine();
-            cmd = cmd.trim();
+        cmd = cmd.trim();
 
             if (cmd.length() == 0) {
                 continue;
@@ -41,37 +43,28 @@ public class App {
             if (cmd.equals("exit")) {
                 break;
             }
-            if (cmd.equals("member join")) {
-                memberController.dojoin();
-            } else if (cmd.equals("article write")) {
-                articleController.doWrite();
-            } else if (cmd.startsWith("article list")) {
-                articleController.showList(cmd);
-            } else if (cmd.startsWith("article detail ")) {
-                articleController.showDetail(cmd);
-            } else if (cmd.startsWith("article modify ")) {
-                articleController.doModify(cmd);
-            } else if (cmd.startsWith("article delete ")) {
-                articleController.doDelete(cmd);
-            }else {
 
+            String[] cmdBits = cmd.split(" "); //article wtite / member join
+            String controllerName = cmdBits[0]; //article / member
+            String actionMethodName = cmdBits[1]; // write / list
+            Controller controller = null;
 
-                System.out.printf("%s(은)는 존재하지 않는 명령어 입니다.\n", cmd);
+            if (controllerName.equals("article")) {
+                controller = articleController;
 
+            } else if (controllerName.equals("member")) {
+                controller = memberController;
+            } else {
+                System.out.println("존재하지 않는 명령어입니다.");
+                continue;
             }
-
-            sc.close();
-            System.out.println("== 프로그램 끝 ==");
-
-
+            controller.doAction(cmd, actionMethodName);
 
         }
-    }
-    private void makeTestData () {
-        System.out.println("테스트를 위한 게시물 데이터를 생성합니다");
+        sc.close();
+        System.out.println("== 프로그램 끝 ==");
 
-        articles.add(new Article(1, Util.getNowDateStr(), "제목 1", "내용 1", 12));
-        articles.add(new Article(2, Util.getNowDateStr(), "제목 2", "내용 2", 103));
-        articles.add(new Article(3, Util.getNowDateStr(), "제목 3", "내용 3", 3));
     }
 }
+
+
