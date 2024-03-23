@@ -13,7 +13,7 @@ public class MemberController extends Controller{
     private List<Member> members;
     private String cmd;
     private String actionMethodName;
-    private Member loginedMember;
+
     public MemberController(Scanner sc){
         this.sc = sc;
         members = new ArrayList<>();
@@ -25,10 +25,10 @@ public class MemberController extends Controller{
 
         switch (actionMethodName){
             case "join":
-                dojoin();
+                doJoin();
                 break;
             case "login":
-                dologin();
+                doLogin();
                 break;
             case "logout":
                 doLogout();
@@ -48,7 +48,7 @@ public class MemberController extends Controller{
         members.add(new Member(2, Util.getNowDateStr(), "user1", "user1", "홍길동"));
         members.add(new Member(3, Util.getNowDateStr(), "user2", "user2", "홍길순"));
     }
-    public void dojoin() {
+    public void doJoin() {
         int id = members.size() + 1;
         String regDate = Util.getNowDateStr();
 
@@ -93,10 +93,6 @@ public class MemberController extends Controller{
         System.out.printf("%d번 회원이 생성되었습니다. 환영합니다!\n", id);
 
     }
-
-    private  boolean isLogined(){
-        return loginedMember != null;
-    }
     private void doLogout() {
         if (isLogined() == false){
             System.out.println("로그인 상태가 아닙니다");
@@ -106,7 +102,7 @@ public class MemberController extends Controller{
         System.out.println("로그아웃 되었습니다.");
 
     }
-    public void dologin() {
+    public void doLogin() {
         if(isLogined()){
             System.out.println("이미 로그인 되어 있습니다.");
             return;
