@@ -57,7 +57,7 @@ public class ArticleController extends Controller{
     }
 
     public void doWrite() {
-        int id = articles.size() + 1;
+        int id = Container.articleDao.getNewId();
         String regDate = Util.getNowDateStr();
         System.out.printf("제목 : ");
         String title = sc.nextLine();
