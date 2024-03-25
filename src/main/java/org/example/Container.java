@@ -2,14 +2,16 @@ package org.example;
 
 import dao.MemberDao;
 import org.example.dao.ArticleDao;
-import org.example.dto.Article;
+import org.example.service.ArticleService;
 
 public class Container {
     public  static ArticleDao articleDao;
     public  static MemberDao memberDao;
+    public  static ArticleService articleService;
 
     static {
         articleDao = new ArticleDao();
         memberDao = new MemberDao();
+        articleService = new ArticleService();
     }
 }
