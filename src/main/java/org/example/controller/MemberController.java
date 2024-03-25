@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.Container;
 import org.example.dto.Article;
 import org.example.dto.Member;
 import org.example.util.Util;
@@ -16,7 +17,7 @@ public class MemberController extends Controller{
 
     public MemberController(Scanner sc){
         this.sc = sc;
-        members = new ArrayList<>();
+        members = Container.memberDao.members;
     }
 
     public void doAction(String cmd, String actionMethodName){
@@ -93,20 +94,9 @@ public class MemberController extends Controller{
         System.out.printf("%d번 회원이 생성되었습니다. 환영합니다!\n", id);
 
     }
-    private void doLogout() {
-        if (isLogined() == false){
-            System.out.println("로그인 상태가 아닙니다");
-            return;
-        }
-        loginedMember = null;
-        System.out.println("로그아웃 되었습니다.");
 
-    }
     public void doLogin() {
-        if(isLogined()){
-            System.out.println("이미 로그인 되어 있습니다.");
-            return;
-        }
+
 
         System.out.printf("로그인 아이디 : ");
         String loginid = sc.nextLine();
@@ -128,6 +118,12 @@ public class MemberController extends Controller{
 
        loginedMember = member;
        System.out.printf("로그인 성공! %s님 환영합니다\n", loginedMember.name);
+    }
+    private void doLogout() {
+
+        loginedMember = null;
+        System.out.println("로그아웃 되었습니다.");
+
     }
 
     private boolean isJoinableLoginId(String loginId) {
