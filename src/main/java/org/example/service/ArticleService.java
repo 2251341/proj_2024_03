@@ -30,4 +30,8 @@ public class ArticleService {
     public void remove(Article foundArticle) {
         articleDao.remove(foundArticle);
     }
+
+    public void write(Article article) {
+        articleDao.add(article);
+    }
 }
