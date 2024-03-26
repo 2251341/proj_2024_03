@@ -39,4 +39,13 @@ public class MemberDao extends Dao {
 
         return members.get(index);
     }
+
+    public String getMemberNameId(int Id) {
+        for (Member member : members){
+            if(member.id == Id){
+                return member.name;
+            }
+        }
+        return "";
+    }
 }

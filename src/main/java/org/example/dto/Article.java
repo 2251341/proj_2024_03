@@ -5,6 +5,7 @@ public class Article extends Dto {
     public String body;
     public int hit;
     public int memberId;
+    public String writerNmae;
 
 
     public Article(int id, String regDate, int memberId, String title, String body, int hit) {
